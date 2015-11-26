@@ -3,7 +3,11 @@ package IHM;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -63,7 +67,7 @@ public class Zone_Jeu extends JPanel{
 			}
 		}
 		
-		centre.setLayout(new GridLayout(3,1,20,20));
+		centre.setLayout(new GridLayout(3,1,0,0));
 		centre.add(labelCentreHaut);
 		centre.add(labelCentreMilieu);
 		centre.add(labelCentreBas);
@@ -78,14 +82,17 @@ public class Zone_Jeu extends JPanel{
 		this.setVisible(true);
 	}
 	
+	@SuppressWarnings("unused")
 	public void afficherCoup(){
-		System.out.println("1");
 		JLabel coup1 = new JLabel(joueur1.getCoup().toString());
-		System.out.println("2");
 		JLabel coup2 = new JLabel(joueur2.getCoup().toString());
-		System.out.println("3");
-		System.out.println(joueur1.getCoup().toString());
-		System.out.println(joueur2.getCoup().toString());
+		
+		String pathVictory="D:\\Shifumi_Swing\\src\\Media\\victory.png";
+		String pathDefeat="D:\\Shifumi_Swing\\src\\Media\\defeat.png";
+		String pathEgalite="D:\\Shifumi_Swing\\src\\Media\\egalite.png";
+		
+		   
+		   
 		labelCentreHaut.setVisible(false);
 		labelCentreMilieu.setVisible(false);
 		labelCentreBas.setVisible(false);
@@ -94,17 +101,46 @@ public class Zone_Jeu extends JPanel{
 		centre.remove(labelCentreMilieu);
 		centre.remove(labelCentreBas);
 	
-		if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
-			if(joueur1.getCoup().gagner(joueur2.getCoup())==-1)
-				if(mode==1)labelCentreMilieu=new JLabel("Le joueur 2 gagne");
-				else labelCentreMilieu=new JLabel("L'Ordinateur gagne");
-			else if(joueur1.getCoup().gagner(joueur2.getCoup())==0)
-				labelCentreMilieu=new JLabel("Egalité");
-			else if(mode==1)labelCentreMilieu=new JLabel("Le joueur 1 gagne");
-				else labelCentreMilieu=new JLabel("Le Joueur gagne");
+		try {
+			JLabel picDefeat = new JLabel(new ImageIcon(ImageIO.read(new File(pathDefeat))));
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==-1)
+					if(mode==1)labelCentreMilieu=new JLabel("Le joueur 2 gagne");
+					else labelCentreMilieu=picDefeat;
+		} catch (IOException e) {
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==-1)
+					if(mode==1)labelCentreMilieu=new JLabel("Le joueur 2 gagne");
+					else labelCentreMilieu=new JLabel("L'Ordinateur Gagne");
+		}
+		
+		try {
+			JLabel picVictory = new JLabel(new ImageIcon(ImageIO.read(new File(pathVictory))));
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==1)
+					if(mode==1)labelCentreMilieu=new JLabel("Le joueur 1 gagne");
+					else labelCentreMilieu=picVictory;
+		} catch (IOException e) {
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==1)
+					if(mode==1)labelCentreMilieu=new JLabel("Le joueur 1 gagne");
+					else labelCentreMilieu=new JLabel("Le Joueur Gagne");
+		}
 			
-		labelCentreHaut=coup1;
-		labelCentreBas=coup2;
+		try {
+			JLabel picEgalite = new JLabel(new ImageIcon(ImageIO.read(new File(pathEgalite))));
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==0)
+					labelCentreMilieu=picEgalite;
+		} catch (IOException e) {
+			if(joueur1.getCoup().toString()!="" && joueur2.getCoup().toString()!="")
+				if(joueur1.getCoup().gagner(joueur2.getCoup())==0)
+					labelCentreMilieu=new JLabel("Egalité");
+		}
+
+		
+		labelCentreHaut=joueur1.getCoup().getLabel();
+		labelCentreBas=joueur2.getCoup().getLabel();
 		
 		
 		centre.add(labelCentreHaut);
